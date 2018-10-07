@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -x
+TAG=$CIRCLE_TAG
+
+# Build docker image
+docker build --build-arg APP_VERSION=$TAG -t whybug/delta_agent .
+
+set +x
+docker login -u $DOCKER_USER -p $DOCKER_PASS
+set -x
+
+# Push image to Docker Hub
+docker tag whybug/delta_agent:latest whybug/delta_agent:$TAG
+docker push whybug/delta_agent:latest
+docker push whybug/delta_agent:$TAG

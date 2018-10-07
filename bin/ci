@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# Continuous Integration Script
+#
+# This script contains all the test commands for this app, to be run on CI.
+# This way, developers can run all the same commands that CI uses to determine
+# if the build passes.
+
+set -xe
+export MIX_ENV=test
+
+# Install dependencies
+mix local.rebar --force
+mix local.hex --force
+mix deps.get --only test
+
+# Run tests
+mix do test

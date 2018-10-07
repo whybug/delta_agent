@@ -3,6 +3,9 @@
 #============
 FROM bitwalker/alpine-elixir:1.7 as build
 
+ARG APP_VERSION=0.0.0
+ENV APP_VERSION ${APP_VERSION}
+
 # Copy the source folder into the Docker image
 WORKDIR /build
 COPY . .
@@ -27,14 +30,16 @@ WORKDIR /opt/app
 
 # Set environment variables and expose port
 EXPOSE 4000
-ENV MIX_ENV=prod \
+ARG APP_VERSION=0.0.0
+ENV APP_VERSION=${APP_VERSION} \
+  MIX_ENV=prod \
   REPLACE_OS_VARS=true \
   PORT=4000
 
 # Copy and extract .tar.gz Release file from the previous stage
 COPY --from=build /build/_build/${MIX_ENV}/rel/* ./
 
-# Change user
+# Change user to Alpine default
 USER default
 
 # Set default entrypoint and command
