@@ -18,4 +18,5 @@ mix deps.get --only test
 mix do test
 
 # Build docker image
-docker build -t whybug/delta_agent .
+# @todo change this to run on "tag" builds
+docker build --build-arg APP_VERSION=1.0.0 -t whybug/delta_agent .
