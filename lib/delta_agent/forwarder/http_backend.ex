@@ -41,7 +41,7 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
         {:ok}
 
       {:ok, %Response{status_code: code}} when code in 400..499 ->
-        {:error, "Forwarding payload failed with status #{code}}"}
+        {:error, "Forwarding payload failed with status #{code}"}
 
       {:ok, %Response{status_code: code}} ->
         {:retry, "Unexpected status: #{inspect(code)}"}

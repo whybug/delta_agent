@@ -27,12 +27,12 @@ defmodule DeltaAgent.Forwarder do
 
   def handle_info(:flush, _state) do
     {:ok, buffer} = Collector.flush_buffer()
-    idempotency_key = idempotency_key(32)
+    idempotency_key = idempotency_key(12)
 
     schedule_next_flush()
 
     Task.start(fn ->
-      retry with: exp_backoff() |> expiry(@backend_expiry), atoms: [:retry] do
+      retry with: exponential_backoff() |> expiry(@backend_expiry), atoms: [:retry] do
         forward_buffer(buffer, idempotency_key)
       after
         result -> result

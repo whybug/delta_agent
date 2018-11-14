@@ -13,7 +13,7 @@ ENV MIX_ENV=prod
 # Dependencies
 FROM builder as deps
 COPY mix.* /app/
-RUN ERL_COMPILER_OPTIONS="[native,{hipe, [o3]}]" mix do deps.get --only prod, deps.compile
+RUN mix do deps.get --only prod, deps.compile
 
 # Release image
 FROM deps as releaser
@@ -21,10 +21,14 @@ COPY . /app/
 RUN mix release --env=prod --no-tar
 
 # Final image with minimal size
-FROM pentacent/alpine-erlang-base:21 as runner
-#RUN apk add --no-cache \
-#  bash \
-#  openssl
+FROM alpine:3.8 as runner
+RUN apk add --no-cache \
+  bash \
+  ncurses-libs \
+  zlib \
+  ca-certificates \
+  openssl \
+  && update-ca-certificates
 RUN addgroup -g 1000 whybug && \
   adduser -D -h /app \
   -G whybug \
@@ -34,9 +38,5 @@ USER whybug
 WORKDIR /app
 COPY --from=releaser /app/_build/prod/rel/delta_agent /app
 EXPOSE 4000
-ENV APP_VERSION=${APP_VERSION} \
-  REPLACE_OS_VARS=true \
-  PORT=4000
-#ENTRYPOINT ["/app/bin/delta_agent"]
-#CMD ["foreground"]
+ENV APP_VERSION=${APP_VERSION}
 CMD trap 'exit' INT; /app/bin/delta_agent foreground

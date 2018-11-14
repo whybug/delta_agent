@@ -4,7 +4,7 @@ defmodule DeltaAgent.OperationTest do
   alias DeltaAgent.Operation
 
   test "fails for empty document" do
-    assert {:error, :parse, _} = Operation.decode('')
+    assert {:error, :decode, _} = Operation.decode('')
   end
 
   test "parses operation definition" do

@@ -25,7 +25,7 @@ defmodule DeltaAgent.Collector do
          {:ok} <- insert(operation) do
       {:ok}
     else
-      {:error, :parse, message} ->
+      {:error, :decode, message} ->
         Logger.warn("Parsing failed", data: data, message: message)
         {:error, message}
 

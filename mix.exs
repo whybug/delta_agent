@@ -24,9 +24,12 @@ defmodule DeltaAgent.MixProject do
   defp deps do
     [
       {:benchee, "~> 0.11", only: :dev},
+      {:cowboy, "~> 2.5"},
       {:distillery, "~> 2.0"},
       {:httpoison, "~> 1.0"},
       {:jason, "~> 1.1"},
+      {:plug, "~> 1.7"},
+      {:plug_cowboy, "~> 2.0"},
       {:retry, "~> 0.10"}
     ]
   end

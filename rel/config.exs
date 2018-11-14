@@ -35,10 +35,14 @@ environment :dev do
 end
 
 environment :prod do
-  # ERTS is included in image
-  set include_erts: false
+  set include_erts: true
   set include_src: false
-  set strip_debug_info: true
+  set config_providers: [
+    {Mix.Releases.Config.Providers.Elixir, ["${RELEASE_ROOT_DIR}/etc/config.exs"]}
+  ]
+  set overlays: [
+    {:copy, "rel/config/config.exs", "etc/config.exs"}
+  ]
   set cookie: :"<!Si/_kop*(Ri/QdU._$Bx4rGJy&T<VR`=aDs8]sv!F0c)smTdZ|Y]1mB|yU_J6B"
 end
 

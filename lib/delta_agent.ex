@@ -6,6 +6,7 @@ defmodule DeltaAgent do
   alias DeltaAgent.Config
   alias DeltaAgent.Collector
   alias DeltaAgent.Collector.UdpServer
+  alias DeltaAgent.Collector.HttpServer
   alias DeltaAgent.Forwarder
 
   def start(_type, _args) do
@@ -16,6 +17,7 @@ defmodule DeltaAgent do
     children = [
       worker(Collector, []),
       worker(UdpServer, [Config.find(:udp_port)]),
+      worker(HttpServer, [Config.find(:http_port)]),
       worker(Forwarder, [])
     ]
 
