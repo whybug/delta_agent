@@ -16,3 +16,6 @@ mix deps.get --only test
 
 # Run tests
 mix do test
+
+# Build docker image
+docker build -t whybug/delta_agent .

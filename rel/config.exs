@@ -35,8 +35,10 @@ environment :dev do
 end
 
 environment :prod do
-  set include_erts: true
+  # ERTS is included in image
+  set include_erts: false
   set include_src: false
+  set strip_debug_info: true
   set cookie: :"<!Si/_kop*(Ri/QdU._$Bx4rGJy&T<VR`=aDs8]sv!F0c)smTdZ|Y]1mB|yU_J6B"
 end
 

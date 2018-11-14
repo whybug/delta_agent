@@ -1,47 +1,42 @@
-#============
-# Build Stage
-#============
-FROM bitwalker/alpine-elixir:1.7 as build
+# Build image including full Elixir
+FROM elixir:1.7.3-alpine as builder
+RUN apk add --no-cache \
+  gcc \
+  git \
+  make \
+  musl-dev
+RUN mix local.rebar --force && \
+  mix local.hex --force
+WORKDIR /app
+ENV MIX_ENV=prod
 
-ARG APP_VERSION=0.0.0
-ENV APP_VERSION ${APP_VERSION}
+# Dependencies
+FROM builder as deps
+COPY mix.* /app/
+RUN ERL_COMPILER_OPTIONS="[native,{hipe, [o3]}]" mix do deps.get --only prod, deps.compile
 
-# Copy the source folder into the Docker image
-WORKDIR /build
-COPY . .
+# Release image
+FROM deps as releaser
+COPY . /app/
+RUN mix release --env=prod --no-tar
 
-# Install dependencies and build Release
-RUN export MIX_ENV=prod && \
-  rm -Rf _build && \
-  mix deps.get && \
-  mix release
-
-# Extract Release archive to /rel for copying in next stage
-RUN APP_NAME="delta_agent" && \
-  RELEASE_DIR=`ls -d _build/prod/rel/$APP_NAME/releases/*/` && \
-  mkdir /export && \
-  tar -xf "$RELEASE_DIR/$APP_NAME.tar.gz" -C /export
-
-#=================
-# Deployment Stage
-#=================
-FROM pentacent/alpine-erlang-base:21
-WORKDIR /opt/app
-
-# Set environment variables and expose port
+# Final image with minimal size
+FROM erlang:21.1-alpine as runner
+RUN apk add --no-cache \
+  bash \
+  openssl
+RUN addgroup -g 1000 whybug && \
+  adduser -D -h /app \
+  -G whybug \
+  -u 1000 \
+  whybug
+USER whybug
+WORKDIR /app
+COPY --from=releaser /app/_build/prod/rel/delta_agent /app
 EXPOSE 4000
-ARG APP_VERSION=0.0.0
 ENV APP_VERSION=${APP_VERSION} \
-  MIX_ENV=prod \
   REPLACE_OS_VARS=true \
   PORT=4000
-
-# Copy and extract .tar.gz Release file from the previous stage
-COPY --from=build /build/_build/${MIX_ENV}/rel/* ./
-
-# Change user to Alpine default
-USER default
-
-# Set default entrypoint and command
-ENTRYPOINT ["/opt/app/bin/delta_agent"]
-CMD ["foreground"]
+#ENTRYPOINT ["/app/bin/delta_agent"]
+#CMD ["foreground"]
+CMD trap 'exit' INT; /app/bin/delta_agent foreground
