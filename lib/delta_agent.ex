@@ -1,6 +1,8 @@
 defmodule DeltaAgent do
   use Application
 
+  require Logger
+
   alias DeltaAgent.Config
   alias DeltaAgent.Collector
   alias DeltaAgent.Collector.UdpServer
@@ -8,6 +10,8 @@ defmodule DeltaAgent do
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
+
+    Logger.info("Agent starting (version #{Config.find(:version)})")
 
     children = [
       worker(Collector, []),

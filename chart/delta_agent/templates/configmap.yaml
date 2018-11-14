@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "delta_agent.fullname" . }}
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/name: {{ template "delta_agent.name" . }}
+data:
+  API_HOST: {{ .Values.agent.apiHost | quote }}
+  FLUSH_INTERVAL_MS: {{ .Values.agent.flushIntervalMs | quote }}
+  BUFFER_SIZE_KB: {{ .Values.agent.bufferSizeKb | quote }}
+  UDP_PORT: {{ .Values.agent.udpPort | quote }}
+  HTTP_PORT: {{ .Values.agent.httpPort | quote }}

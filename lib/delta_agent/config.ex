@@ -4,17 +4,6 @@ defmodule DeltaAgent.Config do
   end
 
   def validate() do
-    api_key = find(:api_key)
-
-    case api_key do
-      nil ->
-        {:error, "API key is not set"}
-
-      "" ->
-        {:error, "API key is empty"}
-
-      _ ->
-        {:ok}
-    end
+    {:ok}
   end
 end

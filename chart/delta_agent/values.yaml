@@ -1,0 +1,31 @@
+replicaCount: 1
+restartPolicy: Never
+
+agent:
+  apiHost: ~
+  flushIntervalMs: ~
+  bufferSizeKb: ~
+  udpPort: 2135
+  httpPort: 2135
+
+image:
+  repository: whybug/delta_agent
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  annotations: {}
+  clusterIP: ""
+  externalIPs: []
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  type: ClusterIP
+  tcpPort: 8888
+  udpPort: 8888
+  nodePort: ""
+
+podAnnotations: {}
+
+resources: {}
+
+nodeSelector: {}

@@ -31,7 +31,7 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
   end
 
   defp send_to_backend(payload, idempotency_key) do
-    url = <<"#{Config.find(:host)}/collect?">>
+    url = <<"#{Config.find(:api_host)}/collect?">>
 
     Logger.debug("Reporting payload to #{url}")
     Logger.debug("Payload size gzipped: #{inspect(:erlang.iolist_size(payload))} bytes")
@@ -56,7 +56,6 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
       {"Agent-Hostname", ""},
       {"User-Agent", "DeltaAgent,version=#{Config.find(:version)}"},
       {"Idempotency-Key", idempotency_key},
-      {"Authorization", "Token #{Config.find(:api_key)}"},
       {"Content-Type", "application/json"},
       {"Content-Encoding", "gzip"}
     ]

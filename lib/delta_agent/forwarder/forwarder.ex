@@ -20,6 +20,7 @@ defmodule DeltaAgent.Forwarder do
 
   def init(_state) do
     schedule_next_flush()
+    Logger.info("Forwarder ready ▶️")
 
     {:ok, []}
   end
@@ -55,7 +56,7 @@ defmodule DeltaAgent.Forwarder do
   end
 
   defp schedule_next_flush() do
-    Process.send_after(self(), :flush, Config.find(:flush_interval))
+    Process.send_after(self(), :flush, Config.find(:flush_interval_ms))
   end
 
   defp idempotency_key(length) do

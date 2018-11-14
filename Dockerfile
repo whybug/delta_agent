@@ -1,5 +1,5 @@
 # Build image including full Elixir
-FROM elixir:1.7.3-alpine as builder
+FROM elixir:1.7.4-alpine as builder
 RUN apk add --no-cache \
   gcc \
   git \
@@ -21,10 +21,10 @@ COPY . /app/
 RUN mix release --env=prod --no-tar
 
 # Final image with minimal size
-FROM erlang:21.1-alpine as runner
-RUN apk add --no-cache \
-  bash \
-  openssl
+FROM pentacent/alpine-erlang-base:21 as runner
+#RUN apk add --no-cache \
+#  bash \
+#  openssl
 RUN addgroup -g 1000 whybug && \
   adduser -D -h /app \
   -G whybug \

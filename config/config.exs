@@ -1,11 +1,11 @@
 use Mix.Config
 
 config :delta_agent,
-  host: "https://delta.whybug.com",
-  udp_port: 2135,
-  api_key: "",
-  flush_interval: 10_000,
-  buffer_size: 5_000
+  api_host: "https://delta.whybug.com",
+  udp_port: System.get_env("UDP_PORT") || 2135,
+  http_port: System.get_env("HTTP_PORT") || 2135,
+  flush_interval_ms: System.get_env("FLUSH_INTERVAL_MS") || 10_000,
+  buffer_size_kb: System.get_env("BUFFER_SIZE_KB") || 10_000
 
 config :logger,
   backends: [:console],
@@ -13,4 +13,6 @@ config :logger,
     [level_lower_than: :debug]
   ]
 
-config :logger, :console, metadata: [:idempotency_key]
+config :logger, :console,
+  metadata: [:idempotency_key],
+  format: "$time $metadata[$level] $levelpad$message\n"

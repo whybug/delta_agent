@@ -13,6 +13,10 @@ defmodule DeltaAgent.Collector.UdpServer do
 
   def init(port) do
     :gen_udp.open(port, [:binary, active: true])
+
+    Logger.info("Listening on UDP port #{port} 🎉")
+
+    {:ok, port}
   end
 
   def handle_info({:udp, _socket, _ip, _port, data}, state) do
