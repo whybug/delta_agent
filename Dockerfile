@@ -3,14 +3,13 @@ FROM elixir:1.7.4-alpine as builder
 ARG APP_VERSION
 ENV APP_VERSION=${APP_VERSION} \
     MIX_ENV=prod
+
 WORKDIR /app
 
 # Build tools
 RUN apk update && \
   apk upgrade --no-cache && \
-  apk add --no-cache \
-    git \
-    build-base && \
+  apk add --no-cache git build-base && \
   mix local.rebar --force && \
   mix local.hex --force
 
