@@ -31,14 +31,19 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
   end
 
   defp gzip(payload) do
-    {:ok, :zlib.gzip(payload)}
+    case Config.find(:use_gzip) do
+      true ->
+        {:ok, :zlib.gzip(payload)}
+      false ->
+        {:ok, payload}
+    end
   end
 
   defp send_to_backend(payload, idempotency_key) do
     url = <<"#{Config.find(:api_host)}?">>
 
     Logger.debug(fn -> "Reporting payload to #{url}" end)
-    Logger.debug(fn -> "Payload size gzipped: #{inspect(:erlang.iolist_size(payload))} bytes" end)
+    Logger.debug(fn -> "Payload size: #{inspect(:erlang.iolist_size(payload))} bytes" end)
 
     case HTTPoison.post(url, payload, headers(idempotency_key)) do
       {:ok, %Response{status_code: code}} when code in 200..299 ->
@@ -61,7 +66,7 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
       {"User-Agent", "DeltaAgent,version=#{Config.find(:version)}"},
       {"Idempotency-Key", idempotency_key},
       {"Content-Type", "application/json"},
-      {"Content-Encoding", "gzip"}
+      {"Content-Encoding", if Config.find(:use_gzip) do "gzip" else "none" end}
     ]
   end
 end
