@@ -19,7 +19,7 @@ defmodule Profiler do
     # We measure the execution time of the entire operation
     {time, _} =
       :timer.tc(fn ->
-        me = self
+        me = self()
 
         # Spawn client processes
         for _ <- 1..concurrency_level do
