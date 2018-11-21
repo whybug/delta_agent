@@ -34,6 +34,7 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
     case Config.find(:use_gzip) do
       true ->
         {:ok, :zlib.gzip(payload)}
+
       false ->
         {:ok, payload}
     end
@@ -67,7 +68,12 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
       {"Authorization", "token #{Config.find(:api_key)}"},
       {"Idempotency-Key", idempotency_key},
       {"Content-Type", "application/json"},
-      {"Content-Encoding", if Config.find(:use_gzip) do "gzip" else "none" end}
+      {"Content-Encoding",
+       if Config.find(:use_gzip) do
+         "gzip"
+       else
+         "none"
+       end}
     ]
   end
 end
