@@ -35,7 +35,7 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
   end
 
   defp send_to_backend(payload, idempotency_key) do
-    url = <<"#{Config.find(:api_host)}/collect?">>
+    url = <<"#{Config.find(:api_host)}?">>
 
     Logger.debug(fn -> "Reporting payload to #{url}" end)
     Logger.debug(fn -> "Payload size gzipped: #{inspect(:erlang.iolist_size(payload))} bytes" end)
