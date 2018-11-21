@@ -1,4 +1,8 @@
 defmodule DeltaAgent.Operation do
+  @moduledoc """
+  Data structure of an operation.
+  """
+
   @derive Jason.Encoder
   @enforce_keys [:hash, :body, :timestamp]
   defstruct [:hash, :body, :timestamp, metadata: []]

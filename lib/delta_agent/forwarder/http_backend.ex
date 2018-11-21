@@ -1,4 +1,7 @@
 defmodule DeltaAgent.Forwarder.HttpBackend do
+  @moduledoc """
+  Forwards data to a HTTP backend.
+  """
   require Logger
 
   alias DeltaAgent.Config

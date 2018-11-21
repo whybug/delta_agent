@@ -1,5 +1,8 @@
-# Simple benchmark helper which relies on :timer.tc/1
 defmodule Profiler do
+  @moduledoc """
+  Simple benchmark helper which relies on :timer.tc/1
+  """
+
   def run(fun, operations_count, concurrency_level \\ 1) do
     IO.puts("")
     Logger.configure(level: :warn)

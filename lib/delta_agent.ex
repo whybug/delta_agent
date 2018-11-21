@@ -1,4 +1,6 @@
 defmodule DeltaAgent do
+  @moduledoc false
+
   use Application
 
   require Logger
