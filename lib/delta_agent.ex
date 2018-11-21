@@ -3,11 +3,8 @@ defmodule DeltaAgent do
 
   require Logger
 
-  alias DeltaAgent.Config
-  alias DeltaAgent.Collector
-  alias DeltaAgent.Collector.UdpServer
-  alias DeltaAgent.Collector.HttpServer
-  alias DeltaAgent.Forwarder
+  alias DeltaAgent.{Collector, Config, Forwarder}
+  alias DeltaAgent.Collector.{HttpServer, UdpServer}
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false

@@ -3,7 +3,7 @@ defmodule DeltaAgent.Config do
     Application.get_env(:delta_agent, key)
   end
 
-  def validate() do
+  def validate do
     {:ok}
   end
 end

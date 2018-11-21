@@ -1,7 +1,8 @@
 defmodule DeltaAgent.Forwarder.HttpBackend do
   require Logger
+
   alias DeltaAgent.Config
-  alias HTTPoison.{Response, Error}
+  alias HTTPoison.{Error, Response}
 
   def forward(payload, idempotency_key) do
     Logger.metadata(idempotency_key: idempotency_key)
@@ -33,8 +34,8 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
   defp send_to_backend(payload, idempotency_key) do
     url = <<"#{Config.find(:api_host)}/collect?">>
 
-    Logger.debug("Reporting payload to #{url}")
-    Logger.debug("Payload size gzipped: #{inspect(:erlang.iolist_size(payload))} bytes")
+    Logger.debug(fn -> "Reporting payload to #{url}" end)
+    Logger.debug(fn -> "Payload size gzipped: #{inspect(:erlang.iolist_size(payload))} bytes" end)
 
     case HTTPoison.post(url, payload, headers(idempotency_key)) do
       {:ok, %Response{status_code: code}} when code in 200..299 ->

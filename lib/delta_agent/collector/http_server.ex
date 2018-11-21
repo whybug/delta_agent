@@ -6,8 +6,7 @@ defmodule DeltaAgent.Collector.HttpServer do
 
   alias DeltaAgent.Collector
 
-  use Plug.Router
-  use Plug.ErrorHandler
+  use Plug.{Router, ErrorHandler}
 
   plug(:match)
   plug(:dispatch)

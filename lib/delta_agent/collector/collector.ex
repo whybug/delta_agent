@@ -10,7 +10,7 @@ defmodule DeltaAgent.Collector do
 
   alias DeltaAgent.Operation
 
-  def start_link() do
+  def start_link do
     GenServer.start_link(__MODULE__, [])
   end
 
@@ -35,7 +35,7 @@ defmodule DeltaAgent.Collector do
     end
   end
 
-  def flush_buffer() do
+  def flush_buffer do
     buffer = %{
       operations: Enum.into(:ets.tab2list(:operations), %{}),
       counts: Enum.into(:ets.tab2list(:operation_counts), %{})
@@ -54,7 +54,7 @@ defmodule DeltaAgent.Collector do
     {:ok}
   end
 
-  defp init_ets() do
+  defp init_ets do
     # Operations are buffered in ETS, an in-memory key/value store.
     ets_options = [
       :set,

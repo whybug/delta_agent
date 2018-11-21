@@ -7,8 +7,7 @@ defmodule DeltaAgent.Forwarder do
   """
   require Logger
   use Retry
-  alias DeltaAgent.Config
-  alias DeltaAgent.Collector
+  alias DeltaAgent.{Collector, Config}
   alias DeltaAgent.Forwarder.HttpBackend
 
   # 1h
@@ -55,12 +54,13 @@ defmodule DeltaAgent.Forwarder do
     HttpBackend.forward(buffer, idempotency_key)
   end
 
-  defp schedule_next_flush() do
+  defp schedule_next_flush do
     Process.send_after(self(), :flush, Config.find(:flush_interval_ms))
   end
 
   defp idempotency_key(length) do
-    :crypto.strong_rand_bytes(length)
+    length
+    |> :crypto.strong_rand_bytes()
     |> Base.url_encode64()
     |> binary_part(0, length)
   end

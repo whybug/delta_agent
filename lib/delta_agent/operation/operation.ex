@@ -9,14 +9,15 @@ defmodule DeltaAgent.Operation do
          {:ok, mapped} <- map(validated) do
       {:ok, mapped}
     else
-      {:error, error = %Jason.DecodeError{}} ->
+      {:error, _error = %Jason.DecodeError{}} ->
         {:error, :decode, "Invalid JSON"}
+
       {:error, message} ->
         {:error, :decode, message}
     end
   end
 
-  defp validate(%{"body" => body} = data), do: {:ok, data}
+  defp validate(%{"body" => _body} = data), do: {:ok, data}
   defp validate(_), do: {:error, "Please provide a 'body' property"}
 
   defp map(data) do
@@ -30,7 +31,8 @@ defmodule DeltaAgent.Operation do
   end
 
   defp hash(graphql) do
-    :crypto.hash(:sha256, graphql)
+    :sha256
+    |> :crypto.hash(graphql)
     |> Base.encode16()
     |> String.downcase()
   end
