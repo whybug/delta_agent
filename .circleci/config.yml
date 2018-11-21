@@ -29,13 +29,19 @@ jobs:
           paths: "deps"
       - save_cache: # you should really save one more cache just in case
           key: v1-mix-cache
-          paths: "deps"
+          paths:
+            - _build
+            - ~/.mix
       - save_cache: # don't forget to save a *build* cache, too
           key: v1-build-cache-{{ .Branch }}
-          paths: "_build"
+          paths:
+            - _build
+            - ~/.mix
       - save_cache: # and one more build cache for good measure
           key: v1-build-cache
-          paths: "_build"
+          paths:
+            - _build
+            - ~/.mix
 
   deploy:
     docker:
