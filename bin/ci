@@ -25,7 +25,7 @@ mix format --check-formatted
 
 # Elixir linting
 mix credo
-mix dialyzer
+# mix dialyzer # disabled for faster builds
 
 # Security
 mix archive.install hex sobelow --force
