@@ -21,8 +21,13 @@ defmodule DeltaAgent.Collector.UdpServer do
   def handle_info({:udp, _socket, _ip, _port, data}, state) do
     # "Fire and forget" task to not block the client
     Task.start(fn ->
-      Logger.debug("Received UDP data: " <> inspect(data))
-      {:ok} = Collector.collect(data)
+      Logger.debug("Received UDP data: #{inspect(data)}}")
+
+      case Collector.collect(data) do
+        {:ok} -> nil
+        {:error, message} ->
+          Logger.warn("Could not use UDP package, error: #{inspect(message)}}")
+      end
     end)
 
     {:noreply, state}

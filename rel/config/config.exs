@@ -8,13 +8,3 @@ config :delta_agent,
        flush_interval_ms: String.to_integer(System.get_env("FLUSH_INTERVAL_MS") || "10000"),
        buffer_size_kb: String.to_integer(System.get_env("BUFFER_SIZE_KB") || "10000")
 
-config :logger,
-       backends: [:console],
-       compile_time_purge_matching: [
-         [level_lower_than: :debug]
-       ]
-
-config :logger, :console,
-       metadata: [:idempotency_key, :data, :message],
-       format: "$time $metadata[$level] $levelpad$message\n"
-

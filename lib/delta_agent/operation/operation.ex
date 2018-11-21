@@ -9,12 +9,15 @@ defmodule DeltaAgent.Operation do
          {:ok, mapped} <- map(validated) do
       {:ok, mapped}
     else
-      {:error, message} -> {:error, :decode, message}
+      {:error, error = %Jason.DecodeError{}} ->
+        {:error, :decode, "Invalid JSON"}
+      {:error, message} ->
+        {:error, :decode, message}
     end
   end
 
   defp validate(%{"body" => body} = data), do: {:ok, data}
-  defp validate(_), do: {:error, "Invalid data. Please provide a 'body' property."}
+  defp validate(_), do: {:error, "Please provide a 'body' property"}
 
   defp map(data) do
     {:ok,

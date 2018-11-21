@@ -29,12 +29,12 @@ defmodule DeltaAgent.Collector.HttpServer do
         send_json(conn, 200, %{"message" => "Received"})
 
       {:error, message} ->
-        send_json(conn, 400, %{"message" => message})
+        send_json(conn, 400, %{"error" => message})
     end
   end
 
   match _ do
-    send_json(conn, 404, %{"message" => "Requested page not found!"})
+    send_json(conn, 404, %{"error" => "Requested page not found!"})
   end
 
   def handle_errors(conn, %{kind: kind, reason: reason, stack: _stack}) do

@@ -54,6 +54,6 @@ defmodule DeltaAgent.CollectorTest do
   test "flushes buffers without errors" do
     Collector.collect('{"body": "test"}')
     Collector.collect('{"body": "test"}')
-    {:ok, buffer} = Collector.flush_buffer()
+    {:ok, _} = Collector.flush_buffer()
   end
 end

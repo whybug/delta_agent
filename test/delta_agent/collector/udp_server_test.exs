@@ -3,8 +3,12 @@ defmodule DeltaAgent.Collector.UdpServerTest do
 
   alias DeltaAgent.Config
 
-  test "sends UDP data to collector" do
+  test "sends invalid UDP data to collector" do
     send('')
+  end
+
+  test "sends valid UDP data to collector" do
+    send('{"body": "example"}')
   end
 
   defp send(data) do

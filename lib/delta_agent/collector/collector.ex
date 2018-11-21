@@ -27,7 +27,7 @@ defmodule DeltaAgent.Collector do
     else
       {:error, :decode, message} ->
         Logger.warn("Parsing failed", data: data, message: message)
-        {:error, message}
+        {:error, "#{message}: #{data}"}
 
       {:error, message} ->
         Logger.warn("Collect failed", data: data, message: message)

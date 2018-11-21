@@ -5,6 +5,6 @@ defmodule DeltaAgent.ConfigTest do
   alias DeltaAgent.Config
 
   test "finds default UDP port to use" do
-    assert Config.find(:udp_port) == 2135
+    assert Config.find(:udp_port) == 2136
   end
 end
