@@ -7,6 +7,10 @@ defmodule DeltaAgent.MixProject do
       app: :delta_agent,
       version: @version,
       elixir: "~> 1.7",
+      dialyzer: [
+        flags: [:unmatched_returns, :error_handling, :race_conditions, :underspecs],
+        ignore_warnings: "dialyzer.ignore-warnings"
+      ],
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -25,6 +29,7 @@ defmodule DeltaAgent.MixProject do
     [
       {:benchee, "~> 0.11", only: :dev},
       {:cowboy, "~> 2.5"},
+      {:credo, "~> 0.9", only: [:dev, :test]},
       {:distillery, "~> 2.0"},
       {:httpoison, "~> 1.0"},
       {:jason, "~> 1.1"},
