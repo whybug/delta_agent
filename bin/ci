@@ -29,7 +29,10 @@ mix dialyzer
 
 # Security
 mix archive.install hex sobelow --force
-mix sobelow --exit Low --with-code --ignore Config.HTTPS
+mix sobelow --exit Low \
+  --verbose \
+  --router=lib/delta_agent/collector/http_server.ex \
+  --ignore Config.HTTPS
 
 # Build docker image
 docker build --build-arg APP_VERSION=1.0.0 -t whybug/delta_agent .
