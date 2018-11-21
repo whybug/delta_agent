@@ -64,6 +64,7 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
     [
       {"Agent-Hostname", ""},
       {"User-Agent", "DeltaAgent,version=#{Config.find(:version)}"},
+      {"Authorization", "token #{Config.find(:api_key)}"},
       {"Idempotency-Key", idempotency_key},
       {"Content-Type", "application/json"},
       {"Content-Encoding", if Config.find(:use_gzip) do "gzip" else "none" end}
