@@ -31,6 +31,7 @@ defmodule DeltaAgent.MixProject do
       {:cowboy, "~> 2.5"},
       {:credo, "~> 0.9", only: [:dev, :test]},
       {:distillery, "~> 2.0"},
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:httpoison, "~> 1.0"},
       {:jason, "~> 1.1"},
       {:plug, "~> 1.7"},

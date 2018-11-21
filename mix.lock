@@ -7,6 +7,7 @@
   "cowlib": {:hex, :cowlib, "2.6.0", "8aa629f81a0fc189f261dc98a42243fa842625feea3c7ec56c48f4ccdb55490f", [:rebar3], [], "hexpm"},
   "credo": {:hex, :credo, "0.10.2", "03ad3a1eff79a16664ed42fc2975b5e5d0ce243d69318060c626c34720a49512", [:mix], [{:bunt, "~> 0.2.0", [hex: :bunt, repo: "hexpm", optional: false]}, {:jason, "~> 1.0", [hex: :jason, repo: "hexpm", optional: false]}], "hexpm"},
   "deep_merge": {:hex, :deep_merge, "0.2.0", "c1050fa2edf4848b9f556fba1b75afc66608a4219659e3311d9c9427b5b680b3", [:mix], [], "hexpm"},
+  "dialyxir": {:hex, :dialyxir, "0.5.1", "b331b091720fd93e878137add264bac4f644e1ddae07a70bf7062c7862c4b952", [:mix], [], "hexpm"},
   "distillery": {:hex, :distillery, "2.0.12", "6e78fe042df82610ac3fa50bd7d2d8190ad287d120d3cd1682d83a44e8b34dfb", [:mix], [{:artificery, "~> 0.2", [hex: :artificery, repo: "hexpm", optional: false]}], "hexpm"},
   "hackney": {:hex, :hackney, "1.14.3", "b5f6f5dcc4f1fba340762738759209e21914516df6be440d85772542d4a5e412", [:rebar3], [{:certifi, "2.4.2", [hex: :certifi, repo: "hexpm", optional: false]}, {:idna, "6.0.0", [hex: :idna, repo: "hexpm", optional: false]}, {:metrics, "1.0.1", [hex: :metrics, repo: "hexpm", optional: false]}, {:mimerl, "1.0.2", [hex: :mimerl, repo: "hexpm", optional: false]}, {:ssl_verify_fun, "1.1.4", [hex: :ssl_verify_fun, repo: "hexpm", optional: false]}], "hexpm"},
   "httpoison": {:hex, :httpoison, "1.4.0", "e0b3c2ad6fa573134e42194d13e925acfa8f89d138bc621ffb7b1989e6d22e73", [:mix], [{:hackney, "~> 1.8", [hex: :hackney, repo: "hexpm", optional: false]}], "hexpm"},
