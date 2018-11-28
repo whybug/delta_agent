@@ -62,7 +62,7 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
   end
 
   defp headers(idempotency_key) do
-    {:ok, hostname} = :inet.gethostname
+    {:ok, hostname} = :inet.gethostname()
 
     [
       {"Agent-Hostname", hostname},

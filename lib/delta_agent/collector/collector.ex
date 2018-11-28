@@ -58,7 +58,7 @@ defmodule DeltaAgent.Collector do
     {:ok, batch}
   end
 
-  defp insert(%Operation{} = operation) do
+  defp insert(operation = %Operation{}) do
     aggregate = Aggregate.from(operation)
 
     :ets.insert_new(:operations, {operation.hash, operation.body})

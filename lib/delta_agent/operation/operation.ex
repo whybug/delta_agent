@@ -38,11 +38,13 @@ defmodule DeltaAgent.Operation do
   defp validate(%{"schema" => schema}) when schema == "" or is_nil(schema),
     do: {:error, "'Schema' property is empty"}
 
-  defp validate(%{"body" => body, "schema" => _schema} = data) when body != "" and not is_nil(body),
-    do: {:ok, data}
+  defp validate(%{"body" => body, "schema" => _schema} = data)
+       when body != "" and not is_nil(body),
+       do: {:ok, data}
 
-  defp validate(%{"hash" => hash, "schema" => _schema} = data) when hash != "" and not is_nil(hash),
-    do: {:ok, data}
+  defp validate(%{"hash" => hash, "schema" => _schema} = data)
+       when hash != "" and not is_nil(hash),
+       do: {:ok, data}
 
   defp validate(_), do: {:error, "Please provide a 'body' or 'hash' and a 'schema' property"}
 

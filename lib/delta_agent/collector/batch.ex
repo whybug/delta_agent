@@ -1,4 +1,8 @@
 defmodule DeltaAgent.Collector.Batch do
+  @moduledoc """
+  Data structure holding aggregated data that can be forwarded.
+  """
+
   @derive Jason.Encoder
   @enforce_keys [:idempotency_key, :operations, :aggregates, :usages]
   defstruct [
