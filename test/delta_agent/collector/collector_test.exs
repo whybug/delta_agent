@@ -4,7 +4,7 @@ defmodule DeltaAgent.CollectorTest do
   alias DeltaAgent.Collector
 
   test "buffers one operation" do
-    Collector.collect('{"body": "test"}')
+    {:ok} = Collector.collect('{"body": "test", "schema": "123"}')
     {:ok, buffer} = Collector.flush_buffer()
 
     assert %{"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08" => 1} =
@@ -18,8 +18,8 @@ defmodule DeltaAgent.CollectorTest do
   end
 
   test "aggregates one operation" do
-    Collector.collect('{"body": "test"}')
-    Collector.collect('{"body": "test"}')
+    {:ok} = Collector.collect('{"body": "test", "schema": "123"}')
+    {:ok} = Collector.collect('{"body": "test", "schema": "123"}')
     {:ok, buffer} = Collector.flush_buffer()
 
     assert %{"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08" => 2} =
@@ -33,9 +33,9 @@ defmodule DeltaAgent.CollectorTest do
   end
 
   test "aggregates multiple operations" do
-    Collector.collect('{"body": "test"}')
-    Collector.collect('{"body": "test"}')
-    Collector.collect('{"body": "test2"}')
+    {:ok} = Collector.collect('{"body": "test", "schema": "123"}')
+    {:ok} = Collector.collect('{"body": "test", "schema": "123"}')
+    {:ok} = Collector.collect('{"body": "test2", "schema": "123"}')
     {:ok, buffer} = Collector.flush_buffer()
 
     assert %{
@@ -52,8 +52,8 @@ defmodule DeltaAgent.CollectorTest do
   end
 
   test "flushes buffers without errors" do
-    Collector.collect('{"body": "test"}')
-    Collector.collect('{"body": "test"}')
+    {:ok} = Collector.collect('{"body": "test", "schema": "123"}')
+    {:ok} = Collector.collect('{"body": "test", "schema": "123"}')
     {:ok, _} = Collector.flush_buffer()
   end
 end

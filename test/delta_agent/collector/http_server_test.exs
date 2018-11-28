@@ -12,7 +12,7 @@ defmodule DeltaAgent.Collector.HttpServerTest do
   end
 
   test "collects JSON" do
-    conn = request(:post, "/", ~s({"body": "test123"}))
+    conn = request(:post, "/", ~s({"body": "test123", "schema": "123"}))
 
     assert 200 == conn.status
     assert ~s({"message":"Received"}) == conn.resp_body
@@ -38,7 +38,7 @@ defmodule DeltaAgent.Collector.HttpServerTest do
 
       assert 400 == conn.status
 
-      assert ~s({"error":"Please provide a 'body' property: {\\"test\\": \\"test\\"}"}) ==
+      assert ~s({"error":"Please provide a 'body' or 'hash' property: {\\"test\\": \\"test\\"}"}) ==
                conn.resp_body
     end
 
