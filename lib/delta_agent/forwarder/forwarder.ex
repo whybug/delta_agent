@@ -8,6 +8,7 @@ defmodule DeltaAgent.Forwarder do
   require Logger
   use Retry
   alias DeltaAgent.{Collector, Config}
+  alias DeltaAgent.Collector.{Batch}
   alias DeltaAgent.Forwarder.HttpBackend
 
   # 2h
@@ -42,7 +43,7 @@ defmodule DeltaAgent.Forwarder do
     {:noreply, []}
   end
 
-  defp forward_batch(%{counts: counts}, _key) when counts == %{} do
+  defp forward_batch(%Batch{usages: usages}) when usages == %{} do
     Logger.debug("Nothing to forward")
 
     {:ok}
