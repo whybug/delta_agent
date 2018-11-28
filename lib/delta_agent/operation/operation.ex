@@ -54,7 +54,7 @@ defmodule DeltaAgent.Operation do
        hash: data["hash"] || hash(data["body"]),
        body: data["body"],
        schema: data["schema"],
-       metadata: data["metadata"] || [],
+       metadata: data["metadata"] || %{},
        timestamp: data["timestamp"] || :os.system_time(:seconds),
        client_os: data["client"]["os"],
        client_version: data["client"]["version"]
