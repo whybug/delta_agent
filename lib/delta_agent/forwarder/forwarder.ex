@@ -10,8 +10,8 @@ defmodule DeltaAgent.Forwarder do
   alias DeltaAgent.{Collector, Config}
   alias DeltaAgent.Forwarder.HttpBackend
 
-  # 1h
-  @backend_expiry 60 * 60_000
+  # 2h
+  @backend_expiry 120 * 60_000
 
   def start_link do
     GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
@@ -25,14 +25,12 @@ defmodule DeltaAgent.Forwarder do
   end
 
   def handle_info(:flush, _state) do
-    {:ok, buffer} = Collector.flush()
-    idempotency_key = idempotency_key(12)
-
+    {:ok, batch} = Collector.flush()
     schedule_next_flush()
 
     Task.start(fn ->
       retry with: exponential_backoff() |> expiry(@backend_expiry), atoms: [:retry] do
-        forward_buffer(buffer, idempotency_key)
+        forward_batch(batch)
       after
         result -> result
       else
@@ -44,25 +42,15 @@ defmodule DeltaAgent.Forwarder do
     {:noreply, []}
   end
 
-  defp forward_buffer(%{counts: counts}, _key) when counts == %{} do
+  defp forward_batch(%{counts: counts}, _key) when counts == %{} do
     Logger.debug("Nothing to forward")
 
     {:ok}
   end
 
-  defp forward_buffer(buffer, idempotency_key) do
-    HttpBackend.forward(buffer, idempotency_key)
-  end
+  defp forward_batch(batch), do: HttpBackend.forward(batch)
 
   defp schedule_next_flush do
     Process.send_after(self(), :flush, Config.find(:flush_interval_ms))
-  end
-
-  # todo: move to batch
-  defp idempotency_key(length) do
-    length
-    |> :crypto.strong_rand_bytes()
-    |> Base.url_encode64()
-    |> binary_part(0, length)
   end
 end
