@@ -75,15 +75,36 @@ defmodule DeltaAgent.OperationTest do
   end
 
   test "fails for empty document" do
-    assert {:error, :decode, _} = Operation.decode('')
+    assert {:error, :decode, "Invalid JSON"} = Operation.decode('')
+  end
+
+  test "fails for empty body" do
+    assert {:error, :decode, "Please provide a 'body' or 'hash' and a 'schema' property"} =
+             Operation.decode(json(%{"body" => ""}, @with_schema))
+
+    assert {:error, :decode, "Please provide a 'body' or 'hash' and a 'schema' property"} =
+             Operation.decode(json(%{"body" => nil}, @with_schema))
+  end
+
+  test "fails for empty hash" do
+    assert {:error, :decode, "Please provide a 'body' or 'hash' and a 'schema' property"} =
+             Operation.decode(json(%{"hash" => ""}, @with_schema))
+
+    assert {:error, :decode, "Please provide a 'body' or 'hash' and a 'schema' property"} =
+             Operation.decode(json(%{"hash" => nil}, @with_schema))
   end
 
   test "fails for empty schema" do
-    assert {:error, :decode, _} = Operation.decode(json(%{"hash" => "Some hash"}))
+    assert {:error, :decode, "'Schema' property is empty"} =
+             Operation.decode(json(%{"hash" => "Some hash", "schema" => ""}))
+
+    assert {:error, :decode, "'Schema' property is empty"} =
+             Operation.decode(json(%{"hash" => "Some hash", "schema" => nil}))
   end
 
   test "fails for unrealistic timestamp" do
-    assert {:error, :decode, _} = Operation.decode(json(%{"timestamp" => 123}, @with_defaults))
+    assert {:error, :decode, "Timestamp '123' should be realistic"} =
+             Operation.decode(json(%{"timestamp" => 123}, @with_defaults))
   end
 
   defp json(data, default \\ %{}) do

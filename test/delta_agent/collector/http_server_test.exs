@@ -38,7 +38,7 @@ defmodule DeltaAgent.Collector.HttpServerTest do
 
       assert 400 == conn.status
 
-      assert ~s({"error":"Please provide a 'body' or 'hash' property: {\\"test\\": \\"test\\"}"}) ==
+      assert ~s({"error":"Please provide a 'body' or 'hash' and a 'schema' property: {\\"test\\": \\"test\\"}"}) ==
                conn.resp_body
     end
 

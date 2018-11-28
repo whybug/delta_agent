@@ -3,7 +3,7 @@
 [![CircleCI](https://circleci.com/gh/whybug/delta_agent.svg?style=svg)](https://circleci.com/gh/whybug/delta_agent)
 
 The Delta Agent is a piece of software that runs in your infrastructure. Its job is
-to collect GraphQL operations and bring them to Delta in a performant manner.
+to collect GraphQL operation usage and bring them to Delta in a performant manner.
 
 ## Requirements
 
@@ -22,6 +22,15 @@ values.yaml
 ```
 chart: whybug/delta_agent
 ```
+
+## Usage
+Sent to Delta Agent:
+  !body or hash
+  !schema
+  !timestamp
+  ?client[os]
+  ?client[version]
+  ?metadata
 
 ## Inspiration
 
