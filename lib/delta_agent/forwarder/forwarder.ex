@@ -25,7 +25,7 @@ defmodule DeltaAgent.Forwarder do
   end
 
   def handle_info(:flush, _state) do
-    {:ok, buffer} = Collector.flush_buffer()
+    {:ok, buffer} = Collector.flush()
     idempotency_key = idempotency_key(12)
 
     schedule_next_flush()
@@ -58,6 +58,7 @@ defmodule DeltaAgent.Forwarder do
     Process.send_after(self(), :flush, Config.find(:flush_interval_ms))
   end
 
+  # todo: move to batch
   defp idempotency_key(length) do
     length
     |> :crypto.strong_rand_bytes()

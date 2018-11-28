@@ -3,6 +3,7 @@ defmodule DeltaAgent.Operation do
   Data structure of an operation.
 
   Either a hash or a body is needed to identify the operation.
+  Also a schema in form of a schema version needs to be passed in.
   """
 
   @derive Jason.Encoder

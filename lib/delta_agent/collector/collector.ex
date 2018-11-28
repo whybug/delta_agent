@@ -1,14 +1,15 @@
 defmodule DeltaAgent.Collector do
   @moduledoc """
-  Collects batches of data grouped by operation.
+  Collects batches of operation usages.
 
-  A forwarder can pick up the data and send it to a backend when needed.
-  If that doesn't happen, the data will be discarded after reaching a max size.
+  A forwarder can flush the collector to get a batch and send
+  that to a backend.
   """
   require Logger
   use GenServer, restart: :permanent
 
   alias DeltaAgent.Operation
+  alias DeltaAgent.Collector.{Aggregate, Batch}
 
   def start_link do
     GenServer.start_link(__MODULE__, [])
@@ -35,21 +36,34 @@ defmodule DeltaAgent.Collector do
     end
   end
 
-  def flush_buffer do
-    buffer = %{
-      operations: Enum.into(:ets.tab2list(:operations), %{}),
-      counts: Enum.into(:ets.tab2list(:operation_counts), %{})
-    }
+  def flush do
+    batch =
+      Batch.new(
+        operations: Enum.into(:ets.tab2list(:operations), %{}),
+        aggregates: Enum.into(:ets.tab2list(:aggregates), %{}),
+        usages:
+          Enum.reduce(:ets.tab2list(:usages), %{}, fn {key, [value]}, acc ->
+            Map.update(acc, key, [value], &[value | &1])
+          end)
+      )
 
+    # todo: Is it worth to delete those? Might not be needed
     :ets.delete_all_objects(:operations)
-    :ets.delete_all_objects(:operation_counts)
+    :ets.delete_all_objects(:aggregates)
 
-    {:ok, buffer}
+    # todo: Figure out how to prevent possible data loss between tab2list
+    # and delete_all_objects. Probably delete object (returns it) one by one.
+    :ets.delete_all_objects(:usages)
+
+    {:ok, batch}
   end
 
   defp insert(%Operation{} = operation) do
-    :ets.insert(:operations, {operation.hash, operation})
-    :ets.update_counter(:operation_counts, operation.hash, {2, 1}, {operation.hash, 0})
+    aggregate = Aggregate.from(operation)
+
+    :ets.insert_new(:operations, {operation.hash, operation.body})
+    :ets.insert_new(:aggregates, {aggregate.hash, aggregate})
+    :ets.insert(:usages, {aggregate.hash, [{operation.timestamp, operation.metadata}]})
 
     {:ok}
   end
@@ -57,7 +71,6 @@ defmodule DeltaAgent.Collector do
   defp init_ets do
     # Operations are buffered in ETS, an in-memory key/value store.
     ets_options = [
-      :set,
       :named_table,
       # all processes can read and write
       :public,
@@ -65,7 +78,11 @@ defmodule DeltaAgent.Collector do
       write_concurrency: true
     ]
 
-    :ets.new(:operations, ets_options)
-    :ets.new(:operation_counts, ets_options)
+    :ets.new(:operations, [:set | ets_options])
+    :ets.new(:aggregates, [:set | ets_options])
+
+    # Usages are stored as a list of timestamps (+ metadata).
+    # There can be multiple entries with the same timestamp.
+    :ets.new(:usages, [:duplicate_bag | ets_options])
   end
 end

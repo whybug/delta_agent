@@ -7,12 +7,12 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
   alias DeltaAgent.Config
   alias HTTPoison.{Error, Response}
 
-  def forward(payload, idempotency_key) do
-    Logger.metadata(idempotency_key: idempotency_key)
+  def forward(batch) do
+    Logger.metadata(idempotency_key: batch.idempotency_key)
 
-    with {:ok, encoded_payload} <- encode_json(payload),
+    with {:ok, encoded_payload} <- encode_json(batch),
          {:ok, compressed_payload} <- gzip(encoded_payload),
-         {:ok} <- send_to_backend(compressed_payload, idempotency_key) do
+         {:ok} <- send_to_backend(compressed_payload, batch.idempotency_key) do
       Logger.debug("Forwarding payload succeeded.")
       {:ok}
     else
@@ -62,8 +62,10 @@ defmodule DeltaAgent.Forwarder.HttpBackend do
   end
 
   defp headers(idempotency_key) do
+    {:ok, hostname} = :inet.gethostname
+
     [
-      {"Agent-Hostname", ""},
+      {"Agent-Hostname", hostname},
       {"User-Agent", "DeltaAgent,version=#{Config.find(:version)}"},
       {"Authorization", "token #{Config.find(:api_key)}"},
       {"Idempotency-Key", idempotency_key},
